@@ -47,7 +47,7 @@ const Maintainance = () => {
                 </div>
                 <h1 className="text-3xl font-bold mb-4">We're Under Maintenance</h1>
                 <p className="text-sm text-gray-500 dark:text-gray-500">
-                    ..but we'll be back shortly!
+                    ..but we'll be back online shortly!
                 </p>
                 </div>
             </div>

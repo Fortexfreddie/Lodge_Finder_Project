@@ -1,12 +1,99 @@
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/footer";
-import { Building2, Home, ShoppingCart, DollarSign, Eye, Trash2, CalendarCheck, PlusIcon, Settings, ArrowRightCircleIcon, ClipboardCheck, UserX, Users, ShieldCheck, UserCheck, Headphones } from "lucide-react";
-import image from '../../assets/listing_images/image.png';
+import { Building2, Home, ShoppingCart, DollarSign, CalendarCheck, PlusIcon, Settings, ArrowRightCircleIcon, ClipboardCheck, UserX, Users, ShieldCheck, UserCheck, Headphones } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 
 const Dashboard = () => {
     const navigate = useNavigate();
+
+    const stats = [
+        {
+            title: 'Total Users',
+            value: '450',
+            icon: Users,
+            link: '/Admin/Users',
+        },
+        {
+            title: 'Total Admins',
+            value: '10',
+            icon: ShieldCheck,
+            link: '/Admin/Users',
+        },
+        {
+            title: 'Total Revenue',
+            value: '₦200,000',
+            icon: DollarSign,
+            link: '/Admin/Revenue',
+        },
+        {
+            title: 'Total Agents',
+            value: '100',
+            icon: UserCheck,
+            link: '/Admin/Users',
+        },
+        {
+            title: 'Total Agent KYC Applications',
+            value: '33',
+            icon: ClipboardCheck,   
+            link: '/Admin/KycApplication',
+        },
+        {
+            title: 'Total Review Listings',
+            value: '46',
+            icon: ClipboardCheck,
+            link: '/Admin/Review',
+        },
+        {
+            title: 'Total Total Listings',
+            value: '10',
+            icon: Building2,
+            link: '/Admin/Properties',
+        },
+        {
+            title: 'Total Active Properties',
+            value: '10',
+            icon: Home,
+            link: '/Admin/Properties',
+        },
+        {
+            title: 'Total Booking Requests',
+            value: '35',
+            icon: CalendarCheck,
+            link: '/Admin/Bookings',
+        },
+        {
+            title: 'Total Total Sales',
+            value: '30',
+            icon: ShoppingCart,
+            link: '/Admin/Users',
+        },
+        {
+            title: 'Total Suspended Users',
+            value: '5',
+            icon: UserX,
+            link: '/Admin/Users',
+        },
+        {
+            title: 'Total Suspended Admins',
+            value: '0',
+            icon: UserX,
+            link: '/Admin/Users',
+        }
+    ];
+
+    const add = [
+        {
+            title: 'Add new Admin',
+            icon: PlusIcon,
+            link: '/Admin/Users',
+        },
+        {
+            title: 'Add new listing',
+            icon: PlusIcon,
+            link: '/Agent/Post',
+        }
+    ];
 
     return ( 
         <div className="flex flex-col min-h-screen">
@@ -29,227 +116,39 @@ const Dashboard = () => {
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">11</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Customer Support</p>
+                            {
+                                stats.map((stat, index) => (
+                                    <div 
+                                        key={index} 
+                                        onClick={() => navigate(stat.link)}
+                                        className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow transition-colors duration-300 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <div className="text-gray-500 dark:text-gray-400">
+                                                <stat.icon className="w-6 h-6" />
+                                            </div>
+                                            <span className="text-xl font-bold text-gray-800 dark:text-white">{stat.value}</span>
+                                        </div>
+                                        <h2 className="text-md font-semibold text-gray-800 dark:text-white">{stat.title}</h2>
                                     </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <Headphones className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                                ))
+                            }
+                            {
+                                add.map((item, index) => (
+                                    <div 
+                                        key={index} 
+                                        onClick={() => navigate(item.link)}
+                                        className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow transition-colors duration-300 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <div className="flex flex-col items-center justify-center mb-4">
+                                            <div className="text-gray-500 dark:text-gray-400">
+                                                <item.icon className="w-6 h-6" />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col items-center justify-center">
+                                            <h2 className="text-md font-semibold text-gray-800 dark:text-white">{item.title}</h2>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Customer Support</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">450</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Users</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <Users className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">10</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Admins</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <ShieldCheck className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">₦200,000</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Revenue</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <DollarSign className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">100</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Agents</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <UserCheck className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">33</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Agent KYC Applications</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <ClipboardCheck className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">46</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Review Listings</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <ClipboardCheck className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Review Listings</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">10</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Total Listings</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <Building2 className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">10</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Active Properties</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <Home className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">35</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Booking Requests</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <CalendarCheck className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">30</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Total Sales</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <ShoppingCart className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">5</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Suspended Users</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <UserX className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-between py-6 px-4">
-                                    <div>
-                                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">0</h1>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-300">Suspended Admins</p>
-                                    </div>
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <UserX className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Total Users</h2>
-                                    <ArrowRightCircleIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-center py-6 px-4">
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <PlusIcon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div 
-                                    onClick={() => navigate("/Agent/Post")}
-                                    className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Add new Admin</h2>
-                                    <PlusIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow transition-colors duration-300">
-                                <div className="flex items-center justify-center py-6 px-4">
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-2xl">
-                                        <PlusIcon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                                    </div>
-                                </div>
-                                <div 
-                                    onClick={() => navigate("/Agent/Post")}
-                                    className="flex items-center justify-between py-2 px-4 bg-gray-50 dark:bg-gray-700">
-                                    <h2 className="text-sm font-medium text-blue-500 dark:text-blue-600">Add new listing</h2>
-                                    <PlusIcon className="h-5 w-5 text-blue-500 dark:text-blue-600" />
-                                </div>
-                            </div>
+                                ))
+                            }
                         </div>
                     </div>    
                 </div>

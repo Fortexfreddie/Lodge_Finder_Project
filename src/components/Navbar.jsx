@@ -3,6 +3,7 @@ import { Search, Moon, Sun, User, Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import SearchBar from "./SearchBar";
+import { jwtDecode } from "jwt-decode";
 
 
 const Navbar = () => {
@@ -16,6 +17,7 @@ const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     // state to show search icon
     const [showSearch, setShowSearch] = useState(false);
+    const [userDetails, setUserDetails] = useState(null);
 
     // Function to toggle dark mode
     const toggleTheme = () => {
@@ -32,6 +34,31 @@ const Navbar = () => {
     document.documentElement.classList.toggle('dark', isDarkMode);
     }, [isDarkMode]);
 
+
+    // Get user details from token
+    useEffect(() => {
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        if (!token) return;
+
+        try {
+            const decoded = jwtDecode(token);
+            if (decoded.exp * 1000 > Date.now()) {
+                setUserDetails(decoded.user);
+                console.log(decoded.user);
+            }
+        } catch (error) {
+            console.error("Invalid token");
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        setUserDetails(null);
+        navigate("/");
+    };
+
+
     return ( 
         <nav className="bg-white dark:bg-gray-800 shadow transition-colors duration-300 px-6">
             <div className='flex justify-between items-center py-4'>
@@ -40,7 +67,11 @@ const Navbar = () => {
                 </div>
                 <ul className="hidden md:flex gap-6 text-gray-600 dark:text-gray-300 font-normal">
                     <li><Link to="/" className='hover:text-blue-700'>Home</Link></li>
-                    <li><Link to="/Profile" className='hover:text-blue-700'>Profile</Link></li>
+                    {
+                        userDetails && (
+                            <li><Link to="/Profile" className='hover:text-blue-700'>Profile</Link></li>
+                        )
+                    }
                     <li><Link to="/Apartments" className='hover:text-blue-700'>Apartments</Link></li>
                     <li><Link to="/Lodges" className='hover:text-blue-700'>Lodges</Link></li>
                 </ul>
@@ -59,14 +90,30 @@ const Navbar = () => {
                     {/* <div className='hidden cursor-pointer text-gray-600 dark:text-gray-300 bg-gray-200 dark:hover:bg-gray-700 dark:bg-gray-800 p-2 rounded-full hover:bg-gray-300 transition-colors'>
                         <User className="h-5 w-5"/>
                     </div> */}
-                    <div className="hidden md:flex items-center cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-700">
-                        <button onClick={() => {
-                            navigate("/Login")
-                        }} className="flex items-center gap-2">
-                            <User className="h-5 w-5"/>
-                            <span className="cursor-pointer">Login</span>
-                        </button>
-                    </div>
+                    {
+                        !userDetails && (
+                            <div className="hidden md:flex items-center cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-700">
+                                <button onClick={() => {
+                                    navigate("/auth/Login")
+                                }} className="flex items-center gap-2">
+                                    <User className="h-5 w-5"/>
+                                    <span className="cursor-pointer">Login</span>
+                                </button>
+                            </div>
+                        )
+                    }
+                    {
+                        userDetails && (
+                            <div className="hidden md:flex items-center cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-700">
+                                <button onClick={() => {
+                                    navigate("/auth/Login")
+                                }} className="flex items-center gap-2">
+                                    <User className="h-5 w-5"/>
+                                    <span className="cursor-pointer">Sign Out</span>
+                                </button>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
             <div
@@ -81,10 +128,28 @@ const Navbar = () => {
                     <div>
                         <ul className="flex flex-col gap-3 text-gray-600 dark:text-gray-300 font-normal">
                             <li><Link to="/" className='hover:text-blue-700'>Home</Link></li>
-                            <li><Link to="/Profile" className='hover:text-blue-700'>Profile</Link></li>
+                            {
+                                userDetails && (
+                                    <li><Link to="/Profile" className='hover:text-blue-700'>Profile</Link></li>
+                                )
+                            }
                             <li><Link to="/Apartments" className='hover:text-blue-700'>Apartments</Link></li>
                             <li><Link to="/Lodges" className='hover:text-blue-700'>Lodges</Link></li>
-                            <li><Link to="/Login" className='hover:text-blue-700'>Login</Link></li>
+                            {
+                                !userDetails && (
+                                    <li><Link to="/auth/Login" className='hover:text-blue-700'>Login</Link></li>
+                                )
+                            }
+                            {
+                                !userDetails && (
+                                    <li><Link to="/auth/Signup" className='hover:text-blue-700'>Sign Up</Link></li>
+                                )
+                            }
+                            {
+                                userDetails && (
+                                    <li><button onClick={handleLogout} className='hover:text-blue-700'>Sign Out</button></li>
+                                )
+                            }
                         </ul>
                     </div>
                 </div>
