@@ -6,19 +6,20 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { ClipLoader } from 'react-spinners';
 import { useState, useEffect } from "react";
+import { getValidToken } from '../../utils/token';
 
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    // redirect to homepage if token is stored
+    // redirect to homepage if valid token is stored
     useEffect(() => {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const token = getValidToken();
         if (token) {
         navigate('/');
         }
-    }, [navigate]);
+    }, []);
 
     const {
         register,
@@ -27,7 +28,8 @@ const Login = () => {
     } = useForm();
 
     const onSubmit = async (data) => {
-        console.log(data);
+        // console.log(data);
+        setLoading(true);
         
         try{
             const response = await axios.post('http://localhost/lodge-finder-project-backend/api/auth/login.php', data, {
@@ -36,7 +38,7 @@ const Login = () => {
                 },
             });
 
-            console.log('Response:', response.data);
+            // console.log('Response:', response.data);
 
             if (response.data.status === 'success') {
                 if (data.remember) {
@@ -44,6 +46,7 @@ const Login = () => {
                 } else {
                     sessionStorage.setItem('token', response.data.token);
                 }
+                
                 navigate("/");
             } else {
                 alert(response.data.message || "Login failed.");

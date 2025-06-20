@@ -44,7 +44,7 @@ const Navbar = () => {
             const decoded = jwtDecode(token);
             if (decoded.exp * 1000 > Date.now()) {
                 setUserDetails(decoded.user);
-                console.log(decoded.user);
+                // console.log(decoded.user);
             }
         } catch (error) {
             console.error("Invalid token");
@@ -105,9 +105,7 @@ const Navbar = () => {
                     {
                         userDetails && (
                             <div className="hidden md:flex items-center cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-700">
-                                <button onClick={() => {
-                                    navigate("/auth/Login")
-                                }} className="flex items-center gap-2">
+                                <button onClick={handleLogout} className="flex items-center gap-2">
                                     <User className="h-5 w-5"/>
                                     <span className="cursor-pointer">Sign Out</span>
                                 </button>

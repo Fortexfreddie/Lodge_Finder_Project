@@ -16,9 +16,8 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
         if (decoded.exp && decoded.exp * 1000 < Date.now()) {
             // Token is expired
-            console.log("Token expired");
-            removeToken();
-            return <Navigate to="/auth/Login" replace />;
+            console.warn("Token expired — letting Axios handle refresh.");
+            // Allow mounting, let Axios handle refresh
         }
 
         // Check user role

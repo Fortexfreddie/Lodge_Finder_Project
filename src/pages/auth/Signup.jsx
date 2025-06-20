@@ -6,19 +6,21 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { ClipLoader } from 'react-spinners';
 import { useState, useEffect } from "react";
+import { getValidToken } from '../../utils/token';
+
 
 
 const Signup = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    // redirect to homepage if token is stored
+    // redirect to homepage if valid token is stored
     useEffect(() => {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const token = getValidToken();
         if (token) {
         navigate('/');
         }
-    }, [navigate]);
+    }, []);
 
     const {
         register,
@@ -31,6 +33,7 @@ const Signup = () => {
 
     const onSubmit = async (data) => {
         console.log(data);
+        setLoading(true);
 
         try{
             const response = await axios.post('http://localhost/lodge-finder-project-backend/api/auth/register.php', data, {
@@ -71,7 +74,7 @@ const Signup = () => {
             <div className="max-w-md w-full">
                     <div className="text-center mb-6">
                         <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">Create your account</h2>
-                        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Already have an account? <Link to="/Login" className="font-medium text-blue-600 hover:text-blue-500">Sign in</Link></p>
+                        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Already have an account? <Link to="/auth/Login" className="font-medium text-blue-600 hover:text-blue-500">Sign in</Link></p>
                     </div>
                     <form className="mt-8" onSubmit={handleSubmit(onSubmit)}>
                         <div className="mb-4">
