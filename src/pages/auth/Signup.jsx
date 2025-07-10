@@ -137,8 +137,8 @@ const Signup = () => {
                             <PhoneIcon className="h-5 w-5 text-gray-400" />
                             <input
                                 type="number"
-                                name="phonenumber"
-                                id="phonenumber"
+                                name="phone"
+                                id="phone"
                                 placeholder="Phone number"
                                 className="outline-0 w-full pl-4 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white"
                                 {...register("phone", { required: "Phone number is required", pattern: {value: /^(?:\+234|0)[789][01]\d{8}$/, message: "Phone number is invalid"} })}

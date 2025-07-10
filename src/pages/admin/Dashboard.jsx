@@ -1,24 +1,48 @@
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/footer";
 import { Building2, Home, ShoppingCart, DollarSign, CalendarCheck, PlusIcon, Settings, ArrowRightCircleIcon, ClipboardCheck, UserX, Users, ShieldCheck, UserCheck, Headphones } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
+import api from '../../utils/api';
+import { useState, useEffect } from "react";
+
 
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const [statsData, setStatsData] = useState(null);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const response = await api.get("/admin/get-dashboard-stats.php");
+
+                if (response.data.status === "success") {
+                    setStatsData(response.data.data);
+                    console.log(response.data.data);
+                }
+            } catch (err) {
+                console.error("Failed to load dashboard stats:", err);
+                if (err.response?.status === 401) {
+                    navigate('/auth/login');
+                }
+            }
+        }
+
+        fetchStats();
+    }, []);
 
     const stats = [
         {
             title: 'Total Users',
-            value: '450',
+            value: statsData?.total_users ?? 0,
             icon: Users,
-            link: '/Admin/Users',
+            link: 'Users',
         },
         {
             title: 'Total Admins',
-            value: '10',
+            value: statsData?.total_admins ?? 0,
             icon: ShieldCheck,
-            link: '/Admin/Users',
+            link: 'Users',
         },
         {
             title: 'Total Revenue',
@@ -28,13 +52,13 @@ const Dashboard = () => {
         },
         {
             title: 'Total Agents',
-            value: '100',
+            value: statsData?.total_agents ?? 0,
             icon: UserCheck,
-            link: '/Admin/Users',
+            link: 'Users',
         },
         {
             title: 'Total Agent KYC Applications',
-            value: '33',
+            value: statsData?.total_kyc_applications ?? 0,
             icon: ClipboardCheck,   
             link: '/Admin/KycApplication',
         },
@@ -149,6 +173,9 @@ const Dashboard = () => {
                                     </div>
                                 ))
                             }
+                        </div>
+                        <div>
+                            <Outlet />
                         </div>
                     </div>    
                 </div>

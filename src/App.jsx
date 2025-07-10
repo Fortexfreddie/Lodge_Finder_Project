@@ -46,21 +46,27 @@ function App() {
           <Revenue />
         </ProtectedRoute>
       } />
+      
       <Route path="/admin/Dashboard" element={
         <ProtectedRoute requiredRole="admin">
           <AdminDashboard />
         </ProtectedRoute>
-      } />
+      }>
+        <Route path="Users" element={<Users />} />
+      </Route>  
+
       <Route path="/admin/Settings" element={
         <ProtectedRoute requiredRole="admin">
           <AdminSettings />
         </ProtectedRoute>
       } />
-      <Route path="/admin/Users" element={
+
+      {/* <Route path="/admin/Users" element={
         <ProtectedRoute requiredRole="admin">
           <Users />
         </ProtectedRoute>
-      } />
+      } /> */}
+      
       <Route path="/admin/Properties" element={
         <ProtectedRoute requiredRole="admin">
           <Properties />

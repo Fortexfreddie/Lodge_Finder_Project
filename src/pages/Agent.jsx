@@ -2,12 +2,23 @@ import { ArrowRight, CreditCard, ImagePlus, PhoneIcon, LockIcon, HomeIcon, MapPi
 import Navbar from "../components/Navbar";
 import Footer from "../components/footer";
 import backgroundImage from "../assets/profile_images/photo10@2x.jpg";
-import Avatar from "../assets/profile_images/image.png"
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import api from '../utils/api';
+import { isThereToken } from '../utils/token';
+import { useEffect, useState } from "react";
 
 
 const Profile = () => {
     const navigate = useNavigate();
+    const [isUploading, setIsUploading] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm();
     
     const locations = [
         { "value": "Eziobodo", "label": "Eziobodo" },
@@ -52,6 +63,57 @@ const Profile = () => {
         { "value": "Zenith Bank", "label": "Zenith Bank" }
     ];
       
+        
+    const onSubmit = async (data) => {
+        if (!isThereToken()) {
+            navigate('/auth/login');
+            return;
+        }
+
+        const file = watch("Passport")?.[0];
+        if (!file) {
+            alert('Please upload a passport image');
+            return;
+        }
+
+        const formData = new FormData(); // Create FormData for file upload
+        if (!file) {
+            alert('Please upload a passport image');
+            return;
+        }
+        formData.append("Passport", file); // Append the file
+        formData.append("Location", data.location);
+        formData.append("Lodge", data.Lodge);
+        formData.append("WhatsappNumber", data.WhatsappNumber);
+        formData.append("AccountNumber", data.AccountNumber);
+        formData.append("Bank", data.Bank);
+
+        setIsUploading(true); // Set uploading state to true
+        
+        try {
+            const response = await api.post('/kyc/submit_kyc.php', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log(response.data);
+            alert('KYC updated successfully');
+            setIsUploading(false); // Reset uploading state
+        } catch (error) {
+            console.error('Error updating KYC:', error);
+            setIsUploading(false); // Reset uploading state
+            if (!err.response) {
+                alert("Network error. Please check your connection.");
+            } else if (err.response.status === 401) {
+                alert('Session expired. Please log in again.');
+                navigate('/auth/login');
+            } else if (err.response?.status === 429) {
+                alert("Too many requests, please try again later.");
+            } else {
+                alert(err.response.data?.message || "Something went wrong. Please try again.");
+            }
+        }
+    }
 
     return ( 
         <div className="min-h-screen flex flex-col">
@@ -77,7 +139,7 @@ const Profile = () => {
                                 <h3 className="text-gray-600 font-semibold dark:text-gray-300">KYC</h3>
                             </div>
                             <div className="p-4">
-                                <form action="">
+                                <form onSubmit={handleSubmit(onSubmit)}>
                                     <div className="mb-4">
                                         <p className="text-md mb-2 text-gray-600 font-normal dark:text-gray-400">Upload accurate details of yourself to become an agent.</p>
                                     </div>
@@ -88,19 +150,28 @@ const Profile = () => {
                                                 <ImagePlus className="h-5 w-5 text-gray-400" />
                                                 <input
                                                     type="file"
-                                                    name="profilePic"
-                                                    id="profilePic"
+                                                    name="Passport"
+                                                    id="Passport"
                                                     className="outline-0 w-full pl-2 text-gray-900 dark:text-white"
                                                     accept="image/*"
+                                                    disabled={isUploading}
+                                                    {...register("Passport", { required: "Image is required", validate: {
+                                                        fileType: (value) => value[0]?.type.startsWith("image/") || "Only image files allowed", fileSize: (value) => value[0]?.size < 2 * 1024 * 1024 || "Max size is 2MB"
+                                                    },
+                                                    })}
                                                 />
                                             </div>
+                                            {errors.Passport && <p className="text-red-500 text-sm mt-1">{errors.Passport.message}</p>}
                                         </div>
                                         <div className="mb-4 w-full">
                                             <label htmlFor="location" className="text-md font-semibold text-gray-600 dark:text-gray-300">Current Location</label>
                                             <div className="flex items-center mt-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 w-full focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-50 focus-within:shadow-lg focus-within:shadow-blue-500/30">
                                                 <MapPin className="h-5 w-5 text-gray-400" />
-                                                <select name="location" id="" className="outline-0 w-full pl-4 pr-2 bg-transparent text-gray-500 dark:text-gray-400">
-                                                    <option value="" disabled selected>Select Location</option>
+                                                <select {...register("location", { required: "Please select a location"})} 
+                                                    name="location" id=""
+                                                    defaultValue=""
+                                                    className="outline-0 w-full pl-4 pr-2 bg-transparent text-gray-500 dark:text-gray-400">
+                                                    <option value="" disabled>Select Location</option>
                                                     {
                                                         locations.map((location, index) => (
                                                             <option key={index} value={location.value}>{location.label}</option>
@@ -108,6 +179,7 @@ const Profile = () => {
                                                     }
                                                 </select>
                                             </div>
+                                            {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location.message}</p> }
                                         </div>
                                         <div className="mb-4 w-full">
                                             <label htmlFor="lodge" className="text-md font-semibold text-gray-600 dark:text-gray-300">Current Lodge</label>
@@ -115,12 +187,14 @@ const Profile = () => {
                                                 <HomeIcon className="h-5 w-5 text-gray-400" />
                                                     <input
                                                         type="text"
-                                                        name="lodge"
-                                                        id="lodge"
+                                                        name="Lodge"
+                                                        id="Lodge"
                                                         placeholder="lodge name"
                                                         className="outline-0 w-full pl-4 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white"
+                                                        {...register("Lodge", { required: "Lodge name is required" })}
                                                     />
                                             </div>
+                                            {errors.Lodge && <p className="text-red-500 text-sm mt-1">{errors.Lodge.message}</p>}
                                         </div>
                                         <div className="mb-4 w-full">
                                             <label htmlFor="whatsappNumber" className="text-md font-semibold text-gray-600 dark:text-gray-300">Whatsapp Number</label>
@@ -132,8 +206,10 @@ const Profile = () => {
                                                         id="WhatsappNumber"
                                                         placeholder="Whatsapp Number"
                                                         className="outline-0 w-full pl-4 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white"
+                                                        {...register("WhatsappNumber", { required: "Whatsapp number is required", pattern: {value: /^(?:\+234|0)[789][01]\d{8}$/, message: "Phone number is invalid"} })}
                                                     />
                                             </div>
+                                            {errors.WhatsappNumber && <p className="text-red-500 text-sm mt-1">{errors.WhatsappNumber.message}</p>}
                                         </div>
                                         <div className="mb-4 w-full">
                                             <label htmlFor="accountNumber" className="text-md font-semibold text-gray-600 dark:text-gray-300">Account Number</label>
@@ -141,19 +217,24 @@ const Profile = () => {
                                                 <LockIcon className="h-5 w-5 text-gray-400" />
                                                     <input
                                                         type="number"
-                                                        name="accountNumber"
-                                                        id="accountNumber"
+                                                        name="AccountNumber"
+                                                        id="AccountNumber"
                                                         placeholder="Account Number"
                                                         className="outline-0 w-full pl-4 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white"
+                                                        {...register("AccountNumber", { required: "Account number is required", minLength: { value: 10, message: "Account number must be 10 characters" }, maxLength: { value: 10, message: "Account number must be 10 characters"} })}
                                                     />
                                             </div>
+                                            {errors.AccountNumber && <p className="text-red-500 text-sm mt-1">{errors.AccountNumber.message}</p>}
                                         </div>
                                         <div className="mb-4 w-full">
                                             <label htmlFor="bank" className="text-md font-semibold text-gray-600 dark:text-gray-300">Bank Name</label>
                                             <div className="flex items-center mt-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 w-full focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-50 focus-within:shadow-lg focus-within:shadow-blue-500/30">
                                                 <CreditCard className="h-5 w-5 text-gray-400" />
-                                                <select name="location" id="" className="outline-0 w-full pl-4 pr-2 bg-transparent text-gray-500 dark:text-gray-400">
-                                                    <option value="" disabled selected>Select Bank</option>
+                                                <select {...register("Bank", { required: "Please select a bank"})} 
+                                                    name="Bank" id="Bank" 
+                                                    defaultValue=""
+                                                    className="outline-0 w-full pl-4 pr-2 bg-transparent text-gray-500 dark:text-gray-400">
+                                                    <option value="" disabled>Select Bank</option>
                                                     {
                                                         banks.map((bank, index) => (
                                                             <option key={index} value={bank.value}>{bank.label}</option>
@@ -161,10 +242,11 @@ const Profile = () => {
                                                     }
                                                 </select>
                                             </div>
+                                            {errors.Bank && <p className="text-red-500 text-sm mt-1">{errors.Bank.message}</p>}
                                         </div>
                                     </div>
                                     <div className="mb-4 flex md:flex items-center justify-center w-full">
-                                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 font-semibold transition-colors cursor-pointer w-full md:w-2/12">Update</button>
+                                        <button type="submit" disabled={isUploading} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 font-semibold transition-colors cursor-pointer w-full md:w-2/12">{isUploading ? "Updating..." : "Update"}</button>
                                     </div>
                                 </form>
                             </div>

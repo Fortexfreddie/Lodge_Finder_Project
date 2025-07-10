@@ -10,11 +10,11 @@ const Users = () => {
     const [searchUsers, setSearchUsers] = useState(false);
     
     return ( 
-        <div className="flex flex-col min-h-screen">
-            <Navbar />
+        <div className="flex flex-col">
+            {/* <Navbar /> */}
             <div className="flex-grow dark:bg-gray-900 bg-gray-100 transition-colors duration-300">
-                <div className="container mx-auto px-4 py-8">
-                    <div className="mb-8">
+                <div className="container mx-auto py-8">
+                    {/* <div className="mb-8">
                         <div className="flex flex-col sm:flex-row items-center justify-between">
                             <div className="text-center sm:text-left">
                                 <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Users Management</h1>
@@ -31,7 +31,7 @@ const Users = () => {
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="flex flex-col items-center">
                     <div className="max-w-6xl w-full bg-white dark:bg-gray-800 rounded-md shadow overflow-hidden mb-6 transition-colors duration-300">
                         <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 px-4 py-3">
@@ -277,7 +277,7 @@ const Users = () => {
                 </div>
                 </div>
             </div>
-            <Footer />
+            {/* <Footer /> */}
         </div>
     );
 }

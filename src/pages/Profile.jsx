@@ -113,6 +113,7 @@ const Profile = () => {
 
     // Push to db
     const handleUpload = async (data) => {
+
         if (!file) return alert("Select a file first");
 
         const formData = new FormData(); // Create FormData for file upload
@@ -135,10 +136,17 @@ const Profile = () => {
             alert("Uploaded successfully");
         } catch (err) {
             setIsUploadingImage(false);
+            setFile(null);
+            setPreview(null);
             console.error(err); 
-            alert("Upload failed");
-            if (err.response?.status === 401) {
+            if (!err.response) {
+                alert("Network error. Please check your connection.");
+            } else if (err.response.status === 401) {
                 navigate('/auth/login');
+            } else if (err.response?.status === 429) {
+                alert("Too many requests, please try again later.");
+            } else {
+                alert(err.response.data?.message || "Something went wrong. Please try again.");
             }
         }
     }
@@ -156,9 +164,14 @@ const Profile = () => {
         } catch (err) {
             setIsDeletingImage(false);
             console.error("Delete failed:", err);
-            alert("Delete failed");
-            if (err.response?.status === 401) {
+            if (!err.response) {
+                alert("Network error. Please check your connection.");
+            } else if (err.response.status === 401) {
                 navigate('/auth/login');
+            } else if (err.response?.status === 429) {
+                alert("Too many requests, please try again later.");
+            } else {
+                alert(err.response.data?.message || "Something went wrong. Please try again.");
             }
         }
     };
@@ -177,9 +190,14 @@ const Profile = () => {
         } catch (err) {
             setIsUpdatingProfile(false);
             console.error("Update failed",err);
-            alert("Profile update failed");
-            if (err.response?.status === 401) {
+            if (!err.response) {
+                alert("Network error. Please check your connection.");
+            } else if (err.response.status === 401) {
                 navigate('/auth/login');
+            } else if (err.response?.status === 429) {
+                alert("Too many requests, please try again later.");
+            } else {
+                alert(err.response.data?.message || "Something went wrong. Please try again.");
             }
         }
     }
@@ -199,9 +217,14 @@ const Profile = () => {
         } catch (err) {
             setIsUpdatingPassword(false);
             console.error("Password update failed",err);
-            alert("Password update failed");
-            if (err.response?.status === 401) {
+            if (!err.response) {
+                alert("Network error. Please check your connection.");
+            } else if (err.response.status === 401) {
                 navigate('/auth/login');
+            } else if (err.response?.status === 429) {
+                alert("Too many requests, please try again later.");
+            } else {
+                alert(err.response.data?.message || "Something went wrong. Please try again.");
             }
         }
     }
@@ -505,8 +528,8 @@ const Profile = () => {
                                                 <PhoneIcon className="h-5 w-5 text-gray-400" />
                                                     <input
                                                         type="number"
-                                                        name="phonenumber"
-                                                        id="phonenumber"
+                                                        name="phone"
+                                                        id="phone"
                                                         placeholder="Phone number"
                                                         className="outline-0 w-full pl-4 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white"
                                                         {...updateRegister("phone", { required: "Phone number is required", pattern: {value: /^(?:\+234|0)[789][01]\d{8}$/, message: "Phone number is invalid"} })}
@@ -556,8 +579,8 @@ const Profile = () => {
                                                 <LockIcon className="h-5 w-5 text-gray-400" />
                                                     <input
                                                         type="password"
-                                                        name="password"
-                                                        id="password"
+                                                        name="currentPassword"
+                                                        id="currentPassword"
                                                         placeholder="password"
                                                         className="outline-0 w-full pl-4 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white"
                                                         {...passwordRegister("currentPassword", { required: "Password is required", minLength: { value: 6, message: "Password must be at least 6 characters" } })}
@@ -573,8 +596,8 @@ const Profile = () => {
                                                 <LockIcon className="h-5 w-5 text-gray-400" />
                                                     <input
                                                         type="password"
-                                                        name="newPassword"
-                                                        id="newPassword"
+                                                        name="password"
+                                                        id="password"
                                                         placeholder="New Password"
                                                         className="outline-0 w-full pl-4 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white"
                                                         {...passwordRegister("password", { required: "Password is required", minLength: { value: 6, message: "Password must be at least 6 characters" } })}
@@ -603,7 +626,7 @@ const Profile = () => {
                                         </div>
                                     </div>
                                     <div className="mb-4 flex md:flex items-center justify-center w-full">
-                                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 font-semibold transition-colors cursor-pointer w-full md:w-2/12">Update</button>
+                                        <button type="submit" disabled={isUpdatingPassword} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 font-semibold transition-colors cursor-pointer w-full md:w-2/12">{isUpdatingPassword ? "Updating..." : "Update"}</button>
                                     </div>
                                 </form>
                             </div>
